@@ -31,7 +31,7 @@ security test against a given target.
 
 Thus, NASL allows you to easily forge IP packets, or to send regular
 packets. It provides you some convenient functions that will make the
-test of web and ftp server more easy to write. NASL garantees you that
+test of web and FTP server more easy to write. NASL garantees you that
 a NASL script:
 - will not send any packet to a host other than the target host,
 - will not execute any commands on your local system.
