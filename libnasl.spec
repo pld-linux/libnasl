@@ -9,14 +9,15 @@ Vendor:		Nessus Project
 Source0:	ftp://ftp.nessus.org/pub/nessus/nessus-%{version}/src/%{name}-%{version}.tar.gz
 # Source0-md5:	879551f7e1943eba7133f64b576c1f67
 Patch0:		%{name}-ac_fix.patch
+Patch1:		%{name}-linkshared.patch
 URL:		http://www.nessus.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	bison
 BuildRequires:	libtool
 BuildRequires:	nessus-libs-devel
-BuildRequires:	openssl-devel
-BuildRequires:	libpcap-devel
-BuildRequires:	bison
+BuildRequires:	tetex-dvips
+BuildRequires:	tetex-format-latex
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -53,6 +54,7 @@ Summary:	NASL libraries development files
 Summary(pl):	Pliki dla programistów u¿ywaj±cych NASL-a
 Group:		Development/Libraries
 Requires:	%{name} = %{version}
+Requires:	nessus-libs-devel
 
 %description devel
 Header files for developing applications that use NASL.
@@ -73,21 +75,26 @@ NASL static libraries.
 Biblioteki statyczne NASLa.
 
 %prep
-%setup -q -n libnasl
+%setup -q -n %{name}
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
 %configure
+
 %{__make}
+
+%{__make} nasl_guide.ps -C doc
+#nasl2_reference.ps requires lyx
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -97,15 +104,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
+%doc TODO doc/*.ps
 %attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+%attr(755,root,root) %{_bindir}/nasl
+%{_mandir}/man1/nasl.1*
 
 %files devel
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/nasl-config
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
-%attr(755,root,root) %{_bindir}/*
-%{_includedir}/nessus/*
-%{_mandir}/man1/*
+%{_includedir}/nessus/nasl.h
+%{_mandir}/man1/nasl-config.1*
 
 %files static
 %defattr(644,root,root,755)
