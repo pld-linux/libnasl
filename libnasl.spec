@@ -1,13 +1,13 @@
 Summary:	NASL libraries
 Summary(pl):	Biblioteki NASL
 Name:		libnasl
-Version:	2.0.8
+Version:	2.0.10a
 Release:	1
 License:	GPL
 Group:		Networking
 Vendor:		Nessus Project
 Source0:	ftp://ftp.nessus.org/pub/nessus/nessus-%{version}/src/%{name}-%{version}.tar.gz
-# Source0-md5:	dcaf86be755eeca67427af7c7535cd74
+# Source0-md5:	59e0c0ed0fbe1fcf35cdfe004e32b37f
 Patch0:		%{name}-ac_fix.patch
 Patch1:		%{name}-linkshared.patch
 URL:		http://www.nessus.org/
@@ -54,7 +54,7 @@ testów dla serwerów WWW i FTP. NASL gwarantuje, ¿e taki skrypt:
 Summary:	NASL libraries development files
 Summary(pl):	Pliki dla programistów u¿ywaj±cych NASL-a
 Group:		Development/Libraries
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{version}-%{release}
 Requires:	nessus-libs-devel >= %{version}
 
 %description devel
@@ -67,7 +67,7 @@ Pliki nag³ówkowe konieczne do rozwoju aplikacji u¿ywaj±cych NASL-a.
 Summary:	NASL static libraries
 Summary(pl):	Biblioteki statyczne NASLa
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}
+Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 NASL static libraries.
