@@ -1,10 +1,11 @@
---- configure.in~	Thu Jul 11 09:08:23 2002
-+++ configure.in	Thu Sep 26 20:54:35 2002
-@@ -124,6 +124,7 @@
- #include <netinet/in_systm.h>
- #include <netinet/in.h>
+diff -urN libnasl.org/configure.in libnasl/configure.in
+--- libnasl.org/configure.in	Tue Mar 18 11:38:04 2003
++++ libnasl/configure.in	Tue Mar 18 11:42:30 2003
+@@ -142,7 +142,6 @@
  #include <netinet/ip.h>])
-+AC_CHECK_HEADERS(netinet/udp.h,,,[#include <sys/types.h>])
- AC_CHECK_HEADERS(netinet/ip.h netinet/udp.h netinet/protocols.h netinet/ip_udp.h netinet/ip_tcp.h netinet/tcpip.h ,,,[#inclu
- de <sys/types.h>
+ AC_CHECK_HEADERS(netinet/ip.h netinet/udp.h netinet/protocols.h netinet/ip_udp.h netinet/ip_tcp.h netinet/tcpip.h ,,,[#include <sys/types.h>
  #include <netinet/in.h>
+-#include <netinet/ip_var.h>
+ #include <netinet/udp.h>
+ #include <netinet/tcp.h>])
+ 
