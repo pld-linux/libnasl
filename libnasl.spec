@@ -45,7 +45,7 @@ zagwarantowanie, ¿e skrypt NASL nie zrobi niczego brzydkiego oprócz
 wykonania testu bezpieczeñstwa na danym celu.
 
 NASL pozwala na ³atwe podrabianie pakietów IP lub wysy³anie normalnych
-pakietów. Udostepnia trochê wygodnych funkcji u³atwiaj±cych pisanie
+pakietów. Udostêpnia trochê wygodnych funkcji u³atwiaj±cych pisanie
 testów dla serwerów WWW i FTP. NASL gwarantuje, ¿e taki skrypt:
 - nie wy¶le ¿adnego pakietu do hosta innego ni¿ wskazany,
 - nie wykona ¿adnych poleceñ na systemie lokalnym.
