@@ -1,19 +1,20 @@
 Summary:	NASL libraries
 Summary(pl):	Biblioteki NASL
 Name:		libnasl
-Version:	1.2.5
+Version:	2.0.1
 Release:	1
 License:	GPL
 Group:		Networking
 Vendor:		Nessus Project
 Source0:	ftp://ftp.nessus.org/pub/nessus/nessus-%{version}/src/%{name}-%{version}.tar.gz
-Patch0:		%{name}-DESTDIR.patch
-Patch1:		%{name}-ac_fix.patch
+Patch0:		%{name}-ac_fix.patch
 URL:		http://www.nessus.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	libtool
 BuildRequires:	nessus-libs-devel
+BuildRequires:	openssl-devel
+BuildRequires:	libpcap-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -72,9 +73,9 @@ Biblioteki statyczne NASLa.
 %prep
 %setup -q -n libnasl
 %patch0 -p1
-%patch1 -p0
 
 %build
+%{__libtoolize}
 %{__aclocal}
 %{__autoconf}
 %configure
