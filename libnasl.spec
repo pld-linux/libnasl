@@ -1,13 +1,13 @@
 Summary:	NASL libraries
 Summary(pl):	Biblioteki NASL
 Name:		libnasl
-Version:	2.0.7
+Version:	2.0.8
 Release:	1
 License:	GPL
 Group:		Networking
 Vendor:		Nessus Project
 Source0:	ftp://ftp.nessus.org/pub/nessus/nessus-%{version}/src/%{name}-%{version}.tar.gz
-# Source0-md5:	c724ad451f79df3a76a3823401c8f7a3
+# Source0-md5:	dcaf86be755eeca67427af7c7535cd74
 Patch0:		%{name}-ac_fix.patch
 Patch1:		%{name}-linkshared.patch
 URL:		http://www.nessus.org/
@@ -15,9 +15,10 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	bison
 BuildRequires:	libtool
-BuildRequires:	nessus-libs-devel
+BuildRequires:	nessus-libs-devel >= %{version}
 BuildRequires:	tetex-dvips
 BuildRequires:	tetex-format-latex
+Requires:	nessus-libs >= %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -54,7 +55,7 @@ Summary:	NASL libraries development files
 Summary(pl):	Pliki dla programistów u¿ywaj±cych NASL-a
 Group:		Development/Libraries
 Requires:	%{name} = %{version}
-Requires:	nessus-libs-devel
+Requires:	nessus-libs-devel >= %{version}
 
 %description devel
 Header files for developing applications that use NASL.
