@@ -10,6 +10,8 @@ Source0:	ftp://ftp.nessus.org/pub/nessus/nessus-%{version}/src/%{name}-%{version
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-ac_fix.patch
 URL:		http://www.nessus.org/
+BuildRequires:	autoconf
+BuildRequires:	libtool
 BuildRequires:	nessus-libs-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
