@@ -1,7 +1,7 @@
 Summary:	NASL libraries
 Summary(pl):	Biblioteki NASL
 Name:		libnasl
-Version:	2.0.3
+Version:	2.0.4
 Release:	1
 License:	GPL
 Group:		Networking
