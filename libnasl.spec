@@ -15,6 +15,7 @@ BuildRequires:	libtool
 BuildRequires:	nessus-libs-devel
 BuildRequires:	openssl-devel
 BuildRequires:	libpcap-devel
+BuildRequires:	bison
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
