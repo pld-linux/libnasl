@@ -21,6 +21,8 @@ BuildRequires:	tetex-format-latex
 Requires:	nessus-libs >= %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define		_localstatedir		/var/lib
+
 %description
 NASL is a scripting language designed for the Nessus security scanner.
 Its aim is to allow anyone to write a test for a given security hole
@@ -109,6 +111,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/lib*.so.*.*.*
 %attr(755,root,root) %{_bindir}/nasl
 %{_mandir}/man1/nasl.1*
+%{_var}/lib/nessus/nessus_org.pem
 
 %files devel
 %defattr(644,root,root,755)
