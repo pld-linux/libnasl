@@ -1,0 +1,13 @@
+--- libnasl/nasl/Makefile.orig	Wed Apr  2 12:46:24 2003
++++ libnasl/nasl/Makefile	Wed Jul  2 15:39:48 2003
+@@ -93,8 +93,8 @@
+ 	@echo "echo \"$(NESSUS_CFLAGS) $(include) $(DEFS) \"" > cflags
+ 	@chmod +x cflags
+ 
+-nasl : cflags $(OBJS) nasl.c
+-	$(CC) $(CFLAGS)  $(NESSUS_INCLUDE) $(include) -o nasl -DVERSION=\"$(VERSION)\" nasl.c $(OBJS) $(NESSUS_LIBS) 
++nasl : cflags libnasl.la nasl.c
++	$(CC) $(CFLAGS)  $(NESSUS_INCLUDE) $(include) -o nasl -DVERSION=\"$(VERSION)\" nasl.c -L.libs -lnasl $(NESSUS_LIBS) 
+ 
+ libnasl.la : cflags $(OBJS)
+ 	$(COMPILE) $(NESSUS_LIBS) -o libnasl.la $(LO_OBJS) -rpath ${libdir} \
