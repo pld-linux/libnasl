@@ -1,13 +1,13 @@
 Summary:	NASL libraries
 Summary(pl):	Biblioteki NASL
 Name:		libnasl
-Version:	2.2.3
+Version:	2.2.4
 Release:	1
 License:	GPL
 Vendor:		Nessus Project
 Group:		Networking
 Source0:	ftp://ftp.nessus.org/pub/nessus/nessus-%{version}/src/%{name}-%{version}.tar.gz
-# Source0-md5:	ee66b86f0a808c9eb1e1756490e5c067
+# Source0-md5:	47de3e86725b5f54f5752233a4bc1ea8
 Patch0:		%{name}-ac_fix.patch
 Patch1:		%{name}-linkshared.patch
 URL:		http://www.nessus.org/
