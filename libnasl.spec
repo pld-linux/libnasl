@@ -1,7 +1,5 @@
-#FIXME: desc/summary a w szczególno¶ci wersje pl ss±
-
-Summary:	Nessus libraries
-Summary(pl):	Biblioteki Nessus
+Summary:	NASL libraries
+Summary(pl):	Biblioteki NASL
 Name:		libnasl
 Version:	1.2.5
 Release:	1
@@ -9,46 +7,59 @@ License:	GPL
 Group:		Networking
 Vendor:		Nessus Project
 Source0:	ftp://ftp.nessus.org/pub/nessus/nessus-%{version}/src/%{name}-%{version}.tar.gz
-#Patch0:		%{name}-DESTDIR.patch
+Patch0:		%{name}-DESTDIR.patch
+Patch1:		%{name}-ac_fix.patch
 URL:		http://www.nessus.org/
 BuildRequires:	nessus-libs-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Libraries for Nessus - a free, powerful, up-to-date and easy to use
-remote security scanner.
+NASL is a scripting language designed for the Nessus security scanner.
+Its aim is to allow anyone to write a test for a given security hole
+in a few minutes, to allow people to share their tests without having
+to worry about their operating system, and to garantee everyone that a
+NASL script can not do anything nasty except performing a given
+security test against a given target.
+
+Thus, NASL allows you to easily forge IP packets, or to send regular
+packets. It provides you some convenient functions that will make the
+test of web and ftp server more easy to write. NASL garantees you that
+a NASL script :
+- will not send any packet to a host other than the target host
+- will not execute any commands on your local system
 
 %description -l pl
-Biblioteki dla Nessusa - wolnego, potê¿nego, aktualnego i ³atwego w
-u¿yciu zdalnego skanera zabezpieczeñ.
+Id¼ siê naucz angielskiego.
 
 %package devel
-Summary:	Nessus libraries development files
-Summary(pl):	Pliki dla deweloperów u¿ywaj±cych Nessusa
+Summary:	NASL libraries development files
+Summary(pl):	Pliki dla deweloperów u¿ywaj±cych NASLa
 Group:		Development/Libraries
+Requires:	%{name} = %{version}
 
 %description devel
-Header files and libraries for developing applications that use
-Nessus.
+Header files and libraries for developing applications that use NASL.
 
 %description devel -l pl
 Pliki nag³ówkowe i biblioteki konieczne do rozwoju aplikacji
-u¿ywaj±cych Nessusa.
+u¿ywaj±cych NASLa.
 
 %package static
-Summary:	Nessus static libraries
-Summary(pl):	Biblioteki statyczne Nessusa
+Summary:	NASL static libraries
+Summary(pl):	Biblioteki statyczne NASLa
 Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}
 
 %description static
-Nessus static libraries.
+NASL static libraries.
 
 %description static -l pl
-Biblioteki statyczne Nessusa.
+Biblioteki statyczne NASLa.
 
 %prep
 %setup -q -n libnasl
-#%patch0 -p1
+%patch0 -p1
+%patch1 -p0
 
 %build
 aclocal
@@ -74,7 +85,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/*
+%{_includedir}/nessus/*
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_libdir}/lib*.la
 %attr(755,root,root) %{_bindir}/*
