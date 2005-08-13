@@ -1,13 +1,13 @@
 Summary:	NASL libraries
 Summary(pl):	Biblioteki NASL
 Name:		libnasl
-Version:	2.2.4
+Version:	2.2.5
 Release:	1
 License:	GPL
 Vendor:		Nessus Project
 Group:		Networking
 Source0:	ftp://ftp.nessus.org/pub/nessus/nessus-%{version}/src/%{name}-%{version}.tar.gz
-# Source0-md5:	47de3e86725b5f54f5752233a4bc1ea8
+# Source0-md5:	da1d96493714c34ae7ffbc1907b5bbcd
 Patch0:		%{name}-ac_fix.patch
 Patch1:		%{name}-linkshared.patch
 URL:		http://www.nessus.org/
@@ -67,7 +67,7 @@ Pliki nag³ówkowe konieczne do rozwoju aplikacji u¿ywaj±cych NASL-a.
 
 %package static
 Summary:	NASL static libraries
-Summary(pl):	Biblioteki statyczne NASLa
+Summary(pl):	Biblioteki statyczne NASL-a
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
@@ -75,7 +75,7 @@ Requires:	%{name}-devel = %{version}-%{release}
 NASL static libraries.
 
 %description static -l pl
-Biblioteki statyczne NASLa.
+Biblioteki statyczne NASL-a.
 
 %prep
 %setup -q -n %{name}
