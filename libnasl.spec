@@ -1,5 +1,5 @@
 Summary:	NASL libraries
-Summary(pl):	Biblioteki NASL
+Summary(pl.UTF-8):   Biblioteki NASL
 Name:		libnasl
 Version:	2.2.7
 Release:	1
@@ -38,23 +38,23 @@ a NASL script:
 - will not send any packet to a host other than the target host,
 - will not execute any commands on your local system.
 
-%description -l pl
-NASL to jÍzyk skryptowy stworzony dla skanera bezpieczeÒstwa Nessus.
-Celem jÍzyka jest umoøliwienie kaødemu napisania testu dla danej
-dziury w bezpieczeÒstwie w kilka minut, umoøliwienie ludziom na
-dzielenie siÍ testami niezaleønie od systemu operacyjnego i
-zagwarantowanie, øe skrypt NASL nie zrobi niczego brzydkiego oprÛcz
-wykonania testu bezpieczeÒstwa na danym celu.
+%description -l pl.UTF-8
+NASL to jƒôzyk skryptowy stworzony dla skanera bezpiecze≈Ñstwa Nessus.
+Celem jƒôzyka jest umo≈ºliwienie ka≈ºdemu napisania testu dla danej
+dziury w bezpiecze≈Ñstwie w kilka minut, umo≈ºliwienie ludziom na
+dzielenie siƒô testami niezale≈ºnie od systemu operacyjnego i
+zagwarantowanie, ≈ºe skrypt NASL nie zrobi niczego brzydkiego opr√≥cz
+wykonania testu bezpiecze≈Ñstwa na danym celu.
 
-NASL pozwala na ≥atwe podrabianie pakietÛw IP lub wysy≥anie normalnych
-pakietÛw. UdostÍpnia trochÍ wygodnych funkcji u≥atwiaj±cych pisanie
-testÛw dla serwerÛw WWW i FTP. NASL gwarantuje, øe taki skrypt:
-- nie wy∂le øadnego pakietu do hosta innego niø wskazany,
-- nie wykona øadnych poleceÒ na systemie lokalnym.
+NASL pozwala na ≈Çatwe podrabianie pakiet√≥w IP lub wysy≈Çanie normalnych
+pakiet√≥w. Udostƒôpnia trochƒô wygodnych funkcji u≈ÇatwiajƒÖcych pisanie
+test√≥w dla serwer√≥w WWW i FTP. NASL gwarantuje, ≈ºe taki skrypt:
+- nie wy≈õle ≈ºadnego pakietu do hosta innego ni≈º wskazany,
+- nie wykona ≈ºadnych polece≈Ñ na systemie lokalnym.
 
 %package devel
 Summary:	NASL libraries development files
-Summary(pl):	Pliki dla programistÛw uøywaj±cych NASL-a
+Summary(pl.UTF-8):   Pliki dla programist√≥w u≈ºywajƒÖcych NASL-a
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	nessus-libs-devel >= %{version}
@@ -62,19 +62,19 @@ Requires:	nessus-libs-devel >= %{version}
 %description devel
 Header files for developing applications that use NASL.
 
-%description devel -l pl
-Pliki nag≥Ûwkowe konieczne do rozwoju aplikacji uøywaj±cych NASL-a.
+%description devel -l pl.UTF-8
+Pliki nag≈Ç√≥wkowe konieczne do rozwoju aplikacji u≈ºywajƒÖcych NASL-a.
 
 %package static
 Summary:	NASL static libraries
-Summary(pl):	Biblioteki statyczne NASL-a
+Summary(pl.UTF-8):   Biblioteki statyczne NASL-a
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 NASL static libraries.
 
-%description static -l pl
+%description static -l pl.UTF-8
 Biblioteki statyczne NASL-a.
 
 %prep
