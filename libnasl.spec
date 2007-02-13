@@ -1,5 +1,5 @@
 Summary:	NASL libraries
-Summary(pl.UTF-8):   Biblioteki NASL
+Summary(pl.UTF-8):	Biblioteki NASL
 Name:		libnasl
 Version:	2.2.7
 Release:	1
@@ -54,7 +54,7 @@ testów dla serwerów WWW i FTP. NASL gwarantuje, że taki skrypt:
 
 %package devel
 Summary:	NASL libraries development files
-Summary(pl.UTF-8):   Pliki dla programistów używających NASL-a
+Summary(pl.UTF-8):	Pliki dla programistów używających NASL-a
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	nessus-libs-devel >= %{version}
@@ -67,7 +67,7 @@ Pliki nagłówkowe konieczne do rozwoju aplikacji używających NASL-a.
 
 %package static
 Summary:	NASL static libraries
-Summary(pl.UTF-8):   Biblioteki statyczne NASL-a
+Summary(pl.UTF-8):	Biblioteki statyczne NASL-a
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
