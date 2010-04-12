@@ -2,7 +2,7 @@ Summary:	NASL libraries
 Summary(pl.UTF-8):	Biblioteki NASL
 Name:		libnasl
 Version:	2.2.7
-Release:	3
+Release:	4
 License:	GPL
 Vendor:		Nessus Project
 Group:		Networking
