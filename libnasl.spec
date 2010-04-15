@@ -90,7 +90,7 @@ Biblioteki statyczne NASL-a.
 %{__autoconf}
 %configure
 
-%{__make}
+%{__make} -j1
 
 %{__make} nasl_guide.ps -C doc
 #nasl2_reference.ps requires lyx
