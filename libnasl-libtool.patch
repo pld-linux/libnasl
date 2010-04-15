@@ -1,0 +1,27 @@
+--- libnasl/nasl/Makefile~	2010-04-15 13:51:42.465124464 +0200
++++ libnasl/nasl/Makefile	2010-04-15 13:52:26.041186871 +0200
+@@ -88,7 +88,7 @@
+ 	nasl_server.c \
+ 	nasl_debug.c
+ 
+-COMPILE = $(LIBTOOL) $(CC) $(CFLAGS) $(NESSUS_INCLUDE)
++COMPILE = $(LIBTOOL) --mode=compile $(CC) $(CFLAGS) $(NESSUS_INCLUDE)
+ all : cflags libnasl.la nasl
+ 
+ .c.o:
+@@ -101,13 +101,13 @@
+ 	$(CC) $(CFLAGS)  $(NESSUS_INCLUDE) $(include) -o nasl -DVERSION=\"$(VERSION)\" nasl.c -L.libs -lnasl $(NESSUS_LIBS) 
+ 
+ libnasl.la : cflags $(OBJS)
+-	$(COMPILE) $(NESSUS_LIBS) -o libnasl.la $(LO_OBJS) -rpath ${libdir} \
++	$(LIBTOOL) --mode=link $(CC) $(NESSUS_LIBS) -o libnasl.la $(LO_OBJS) -rpath ${libdir} \
+ 	-version-info ${PACKAGE_VERSION}
+ 
+ install : libnasl.la nasl
+ 	test -d $(DESTDIR)${libdir} || $(INSTALL_DIR) -m 755 $(DESTDIR)${libdir}
+ 	test -d $(DESTDIR)${bindir} || $(INSTALL_DIR) -m 755 $(DESTDIR)${bindir}
+-	$(LIBTOOL) --mode install $(INSTALL) libnasl.la $(DESTDIR)${libdir}/libnasl.la
++	$(LIBTOOL) --mode=install $(INSTALL) libnasl.la $(DESTDIR)${libdir}/libnasl.la
+ 	$(LIBTOOL) --finish $(DESTDIR)${libdir}
+ 	test -d $(DESTDIR)${bindir} || $(INSTALL_DIR) -m 755 $(DESTDIR)${bindir}
+ 	$(INSTALL) nasl $(DESTDIR)${bindir}/

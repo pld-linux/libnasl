@@ -2,7 +2,7 @@ Summary:	NASL libraries
 Summary(pl.UTF-8):	Biblioteki NASL
 Name:		libnasl
 Version:	2.2.7
-Release:	4
+Release:	5
 License:	GPL
 Vendor:		Nessus Project
 Group:		Networking
@@ -10,6 +10,7 @@ Source0:	ftp://ftp.nessus.org/pub/nessus/nessus-%{version}/src/%{name}-%{version
 # Source0-md5:	37f6f0db022dad1e218371909de3e8af
 Patch0:		%{name}-ac_fix.patch
 Patch1:		%{name}-linkshared.patch
+Patch2:		%{name}-libtool.patch
 URL:		http://www.nessus.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -81,6 +82,7 @@ Biblioteki statyczne NASL-a.
 %setup -q -n %{name}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__libtoolize}
