@@ -1,0 +1,11 @@
+--- nasl/nasl_crypto2.c.orig	2009-01-12 17:27:38.000000000 +0100
++++ nasl/nasl_crypto2.c	2009-01-12 17:30:53.000000000 +0100
+@@ -644,7 +644,7 @@
+   if (BN_bin2bn((const unsigned char*)s, slen, sig->s) == 0)
+      goto fail;
+ 
+-  if (DSA_do_verify((unsigned char*)data, datalen, sig, dsa))
++  if (DSA_do_verify((unsigned char*)data, datalen, sig, dsa) == 1)
+      retc->x.i_val = 1;
+   
+ fail:
