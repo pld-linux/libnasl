@@ -13,6 +13,8 @@ Patch0:		%{name}-ac_fix.patch
 Patch1:		%{name}-linkshared.patch
 Patch2:		%{name}-libtool.patch
 Patch3:		libnasl-openssl.patch
+Patch4:		openssl.patch
+Patch5:		bison.patch
 URL:		http://www.nessus.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -85,7 +87,9 @@ Biblioteki statyczne NASL-a.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p0
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
 
 %build
 %{__libtoolize}
@@ -113,6 +117,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc doc/*.ps
+%attr(755,root,root) %ghost %{_libdir}/lib*.so.2
 %attr(755,root,root) %{_libdir}/lib*.so.*.*.*
 %attr(755,root,root) %{_bindir}/nasl
 %{_mandir}/man1/nasl.1*

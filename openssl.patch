@@ -1,0 +1,330 @@
+diff -urp libnasl.org/nasl/nasl_crypto2.c libnasl/nasl/nasl_crypto2.c
+--- libnasl.org/nasl/nasl_crypto2.c	2018-09-30 13:00:21.367626704 +0200
++++ libnasl/nasl/nasl_crypto2.c	2018-09-30 13:43:32.324746348 +0200
+@@ -148,7 +148,7 @@ tree_cell * nasl_pem_to(lex_ctxt* lexic,
+   tree_cell	*retc = NULL;
+   RSA * rsa = NULL;
+   DSA * dsa = NULL;
+-  BIGNUM * key = NULL;
++  const BIGNUM * key = NULL;
+   BIO * bio = NULL;
+   long privlen, plen, s1len;
+   int len;
+@@ -178,14 +178,14 @@ tree_cell * nasl_pem_to(lex_ctxt* lexic,
+       rsa = PEM_read_bio_RSAPrivateKey(bio, NULL, NULL, passphrase);
+       if (!rsa)
+         goto fail;
+-      key = rsa->d;
++      RSA_get0_key(rsa, NULL, NULL, &key);
+     }
+   else
+     {
+       dsa = PEM_read_bio_DSAPrivateKey(bio, NULL, NULL, passphrase);
+       if (!dsa)
+         goto fail;
+-      key = dsa->priv_key;
++      DSA_get0_key(dsa, NULL, &key);
+     }
+   
+   s1len = BN_num_bytes(key);
+@@ -236,6 +236,8 @@ tree_cell * nasl_dh_generate_key(lex_ctx
+   char		*s1 = NULL,*s2 = NULL,*s3 = NULL,*pub = NULL;
+   tree_cell	*retc = NULL;
+   DH *dh = NULL;
++  BIGNUM *dh_p, *dh_g, *dh_priv_key;
++  const BIGNUM *dh_pub_key;
+   long sz1, sz2, sz3, pubsize;
+   int len;
+ 
+@@ -260,29 +262,30 @@ tree_cell * nasl_dh_generate_key(lex_ctx
+   if ((dh = DH_new()) == NULL)
+      goto fail;
+  
+-  dh->p = BN_new();
+-  dh->g = BN_new();
+-  dh->priv_key = BN_new();
++  dh_p = BN_new();
++  dh_g = BN_new();
++  dh_priv_key = BN_new();
+   
+ 
+-  if (BN_bin2bn((const unsigned char*)s1, sz1, dh->p) == 0)
++  if (BN_bin2bn((const unsigned char*)s1, sz1, dh_p) == 0)
+      goto fail;
+-  if (BN_bin2bn((const unsigned char*)s2, sz2, dh->g) == 0)
++  if (BN_bin2bn((const unsigned char*)s2, sz2, dh_g) == 0)
+      goto fail;
+-  if (BN_bin2bn((const unsigned char*)s3, sz3, dh->priv_key) == 0)
++  if (BN_bin2bn((const unsigned char*)s3, sz3, dh_priv_key) == 0)
+      goto fail;
+ 
+-  if (dh->p == NULL)
++  if (!DH_set0_pqg(dh, dh_p, NULL, dh_g) || !DH_set0_key(dh, NULL, dh_priv_key))
+     goto fail;
+ 
+   if (DH_generate_key(dh) == 0)
+       goto fail;
+ 
+-  pubsize = BN_num_bytes(dh->pub_key);
++  pubsize = BN_num_bytes(dh_pub_key);
+   pub = emalloc(pubsize); 
+   if (pub == NULL)
+      goto fail;
+-  BN_bn2bin(dh->pub_key, (unsigned char*)pub);
++  DH_get0_key(dh, &dh_pub_key, NULL);
++  BN_bn2bin(dh_pub_key, (unsigned char*)pub);
+ 
+   if (pub[0] & 0x80)
+     len = 1;
+@@ -312,6 +315,7 @@ tree_cell * nasl_dh_compute_key(lex_ctxt
+   tree_cell	*retc = NULL;
+   BIGNUM *dh_server_pub = NULL;
+   DH *dh = NULL;
++  BIGNUM *dh_p, *dh_g, *dh_pub_key, *dh_priv_key;
+   int kout,klen,len;
+   long sz1, sz2, sz3, sz4, sz5;
+ 
+@@ -345,23 +349,26 @@ tree_cell * nasl_dh_compute_key(lex_ctxt
+   if ((dh = DH_new()) == NULL)
+      goto fail;
+  
+-  dh->p = BN_new();
+-  dh->g = BN_new();
+-  dh->pub_key = BN_new();
+-  dh->priv_key = BN_new();
++  dh_p = BN_new();
++  dh_g = BN_new();
++  dh_pub_key = BN_new();
++  dh_priv_key = BN_new();
+   dh_server_pub = BN_new();
+ 
+-  if (BN_bin2bn((const unsigned char*)s1, sz1, dh->p) == 0)
++  if (BN_bin2bn((const unsigned char*)s1, sz1, dh_p) == 0)
+      goto fail;
+-  if (BN_bin2bn((const unsigned char*)s2, sz2, dh->g) == 0)
++  if (BN_bin2bn((const unsigned char*)s2, sz2, dh_g) == 0)
+      goto fail;
+   if (BN_bin2bn((const unsigned char*)s3, sz3, dh_server_pub) == 0)
+      goto fail;
+-  if (BN_bin2bn((const unsigned char*)s4, sz4, dh->pub_key) == 0)
++  if (BN_bin2bn((const unsigned char*)s4, sz4, dh_pub_key) == 0)
+      goto fail;
+-  if (BN_bin2bn((const unsigned char*)s5, sz5, dh->priv_key) == 0)
++  if (BN_bin2bn((const unsigned char*)s5, sz5, dh_priv_key) == 0)
+      goto fail;
+ 
++  if (!DH_set0_pqg(dh, dh_p, NULL, dh_g) || !DH_set0_key(dh, dh_pub_key, dh_priv_key))
++    goto fail;
++
+   klen = DH_size(dh);
+   kbuf = emalloc(klen);
+   kout = DH_compute_key((unsigned char*)kbuf, dh_server_pub, dh);
+@@ -415,13 +422,8 @@ tree_cell * nasl_rsa_public_decrypt(lex_
+   if ((rsa = RSA_new()) == NULL)
+     goto fail;
+  
+-
+-  rsa->e = BN_new();
+-  rsa->n = BN_new();
+-
+-  if (BN_bin2bn((const unsigned char*)s3, sz3, rsa->n) == 0)
+-    goto fail;
+-  if (BN_bin2bn((const unsigned char*)s2, sz2, rsa->e) == 0)
++  if (!RSA_set0_key(rsa, BN_bin2bn((const unsigned char*)s3, sz3, NULL),
++	BN_bin2bn((const unsigned char*)s2, sz2, NULL), NULL))
+     goto fail;
+ 
+   decrypted = emalloc(sz1);
+@@ -481,15 +483,9 @@ tree_cell * nasl_rsa_sign(lex_ctxt* lexi
+   if ((rsa = RSA_new()) == NULL)
+     goto fail;
+  
+-  rsa->e = BN_new();
+-  rsa->n = BN_new();
+-  rsa->d = BN_new();
+-
+-  if (BN_bin2bn((const unsigned char*)s3, sz3, rsa->n) == 0)
+-    goto fail;
+-  if (BN_bin2bn((const unsigned char*)s2, sz2, rsa->e) == 0)
+-    goto fail;
+-  if (BN_bin2bn((const unsigned char*)s4, sz4, rsa->d) == 0)
++  if (!RSA_set0_key(rsa, BN_bin2bn((const unsigned char*)s3, sz3, NULL),
++	BN_bin2bn((const unsigned char*)s2, sz2, NULL),
++	BN_bin2bn((const unsigned char*)s4, sz4, NULL)))
+     goto fail;
+ 
+   slen = RSA_size(rsa);
+@@ -631,18 +627,14 @@ tree_cell * nasl_dsa_do_verify(lex_ctxt*
+   if ((sig = DSA_SIG_new()) == NULL)
+     goto fail;
+   
+-  if (BN_bin2bn((const unsigned char*)p, plen, dsa->p) == 0)
+-     goto fail;
+-  if (BN_bin2bn((const unsigned char*)g, glen, dsa->g) == 0)
+-     goto fail;
+-  if (BN_bin2bn((const unsigned char*)q, qlen, dsa->q) == 0)
+-     goto fail;
+-  if (BN_bin2bn((const unsigned char*)pub, publen, dsa->pub_key) == 0)
+-     goto fail;
+-  if (BN_bin2bn((const unsigned char*)r, rlen, sig->r) == 0)
+-     goto fail;
+-  if (BN_bin2bn((const unsigned char*)s, slen, sig->s) == 0)
+-     goto fail;
++  if (!DSA_set0_pqg(dsa, BN_bin2bn((const unsigned char*)p, plen, NULL),
++	BN_bin2bn((const unsigned char*)q, qlen, NULL),
++	BN_bin2bn((const unsigned char*)g, glen, NULL)) ||
++      DSA_set0_key(dsa, BN_bin2bn((const unsigned char*)pub, publen, NULL),
++	NULL) ||
++      DSA_SIG_set0(sig, BN_bin2bn((const unsigned char*)r, rlen, NULL),
++	BN_bin2bn((const unsigned char*)s, slen, NULL)))
++    goto fail;
+ 
+   if (DSA_do_verify((unsigned char*)data, datalen, sig, dsa) == 1)
+      retc->x.i_val = 1;
+@@ -661,6 +653,7 @@ tree_cell * nasl_dsa_do_sign(lex_ctxt* l
+   tree_cell	*retc = NULL;
+   DSA *dsa = NULL;
+   DSA_SIG * sig = NULL;
++  const BIGNUM *r, *s;
+   char *sigblob;
+   long plen, glen, qlen, publen, privlen, rlen, slen, datalen;
+ 
+@@ -705,22 +698,12 @@ tree_cell * nasl_dsa_do_sign(lex_ctxt* l
+   if ((sig = DSA_SIG_new()) == NULL)
+     goto fail;
+ 
+-  dsa->p = BN_new();
+-  dsa->g = BN_new();
+-  dsa->q = BN_new();
+-  dsa->pub_key = BN_new();
+-  dsa->priv_key = BN_new();
+-  
+-  if (BN_bin2bn((const unsigned char*)p, plen, dsa->p) == 0)
+-     goto fail;
+-  if (BN_bin2bn((const unsigned char*)g, glen, dsa->g) == 0)
+-     goto fail;
+-  if (BN_bin2bn((const unsigned char*)q, qlen, dsa->q) == 0)
+-     goto fail;
+-  if (BN_bin2bn((const unsigned char*)pub, publen, dsa->pub_key) == 0)
+-     goto fail;
+-  if (BN_bin2bn((const unsigned char*)priv, privlen, dsa->priv_key) == 0)
+-     goto fail;
++ if (!DSA_set0_pqg(dsa, BN_bin2bn((const unsigned char*)p, plen, NULL),
++       BN_bin2bn((const unsigned char*)q, qlen, NULL),
++       BN_bin2bn((const unsigned char*)g, glen, NULL)) ||
++     !DSA_set0_key(dsa, BN_bin2bn((const unsigned char*)pub, publen, NULL),
++       BN_bin2bn((const unsigned char*)priv, privlen, NULL)))
++   goto fail;
+ 
+   sig = DSA_do_sign((unsigned char*)data, datalen, dsa);
+   if (!sig)
+@@ -728,14 +711,17 @@ tree_cell * nasl_dsa_do_sign(lex_ctxt* l
+ 
+   sigblob = emalloc(SIGBLOB_LEN);
+   memset(sigblob, 0, SIGBLOB_LEN);
+-  rlen = BN_num_bytes(sig->r);
+-  slen = BN_num_bytes(sig->s);
++  r = BN_new();
++  s = BN_new();
++  DSA_SIG_get0(sig, &r, &s);
++  rlen = BN_num_bytes(r);
++  slen = BN_num_bytes(s);
+ 
+   if (rlen > INTBLOB_LEN || slen > INTBLOB_LEN)
+     goto fail;
+ 
+-  BN_bn2bin(sig->r, (unsigned char*)(sigblob+ SIGBLOB_LEN - INTBLOB_LEN - rlen));
+-  BN_bn2bin(sig->s, (unsigned char*)(sigblob+ SIGBLOB_LEN - slen));
++  BN_bn2bin(r, (unsigned char*)(sigblob+ SIGBLOB_LEN - INTBLOB_LEN - rlen));
++  BN_bn2bin(s, (unsigned char*)(sigblob+ SIGBLOB_LEN - slen));
+   
+   retc->x.str_val = sigblob;
+   retc->size = SIGBLOB_LEN;
+diff -urp libnasl.org/nasl/nasl_crypto.c libnasl/nasl/nasl_crypto.c
+--- libnasl.org/nasl/nasl_crypto.c	2018-09-30 13:00:21.367626704 +0200
++++ libnasl/nasl/nasl_crypto.c	2018-09-30 13:54:00.966797528 +0200
+@@ -106,26 +106,6 @@ tree_cell * nasl_md5(lex_ctxt * lexic)
+  return retc;
+ }
+ 
+-tree_cell * nasl_sha(lex_ctxt * lexic)
+-{
+- char * data = get_str_var_by_num(lexic, 0);
+- int    len  = get_var_size_by_num(lexic, 0);
+- char md[SHA_DIGEST_LENGTH+1];
+- tree_cell * retc;
+- 
+- if(data == NULL)
+-  return NULL;
+- 
+- SHA((unsigned char*)data, len, (unsigned char*)md);
+-
+- retc = alloc_tree_cell(0, NULL);
+- retc->type = CONST_DATA;
+- retc->x.str_val = nasl_strndup(md, SHA_DIGEST_LENGTH);
+- retc->size = SHA_DIGEST_LENGTH;
+- return retc;
+-}
+-
+-
+ tree_cell * nasl_sha1(lex_ctxt * lexic)
+ {
+  char * data = get_str_var_by_num(lexic, 0);
+@@ -208,24 +188,11 @@ tree_cell * nasl_hmac_md5(lex_ctxt * lex
+  return nasl_hmac(lexic, EVP_md5());
+ }
+ 
+-tree_cell * nasl_hmac_sha(lex_ctxt * lexic)
+-{
+- return nasl_hmac(lexic, EVP_sha());
+-}
+-
+-
+ tree_cell * nasl_hmac_sha1(lex_ctxt * lexic)
+ {
+  return nasl_hmac(lexic, EVP_sha1());
+ }
+ 
+-
+-tree_cell * nasl_hmac_dss(lex_ctxt * lexic)
+-{
+- return nasl_hmac(lexic, EVP_dss());
+-}
+-
+-
+ tree_cell * nasl_hmac_ripemd160(lex_ctxt * lexic)
+ {
+  return nasl_hmac(lexic, EVP_ripemd160());
+diff -urp libnasl.org/nasl/nasl_crypto.h libnasl/nasl/nasl_crypto.h
+--- libnasl.org/nasl/nasl_crypto.h	2005-02-10 17:03:52.000000000 +0100
++++ libnasl/nasl/nasl_crypto.h	2018-09-30 13:54:17.393952342 +0200
+@@ -10,9 +10,7 @@ tree_cell * nasl_sha1(lex_ctxt *);
+ tree_cell * nasl_ripemd160(lex_ctxt *);
+ tree_cell * nasl_hmac_md2(lex_ctxt * );
+ tree_cell * nasl_hmac_md5(lex_ctxt * );
+-tree_cell * nasl_hmac_sha(lex_ctxt *);
+ tree_cell * nasl_hmac_sha1(lex_ctxt * );
+-tree_cell * nasl_hmac_dss(lex_ctxt *);
+ tree_cell * nasl_hmac_ripemd160(lex_ctxt *);
+ #endif
+ 
+diff -urp libnasl.org/nasl/nasl_init.c libnasl/nasl/nasl_init.c
+--- libnasl.org/nasl/nasl_init.c	2008-03-12 09:09:20.000000000 +0100
++++ libnasl/nasl/nasl_init.c	2018-09-30 13:54:24.570832276 +0200
+@@ -254,16 +254,13 @@ static init_func libfuncs[] = {
+   { "MD4", nasl_md4, 1, { NULL }},
+ #endif
+   { "MD5", nasl_md5, 1, { NULL }}, 
+-  { "SHA", nasl_sha, 1, { NULL }},
+   { "SHA1", nasl_sha1, 1, { NULL }},
+   { "RIPEMD160", nasl_ripemd160, 1, { NULL }},
+ #ifdef HAVE_OPENSSL_MD2_H  
+   { "HMAC_MD2", nasl_hmac_md2, 0, { "data", "key", NULL }},
+ #endif  
+   { "HMAC_MD5", nasl_hmac_md5, 0, { "data", "key", NULL }},
+-  { "HMAC_SHA", nasl_hmac_sha, 0, { "data", "key", NULL }},
+   { "HMAC_SHA1", nasl_hmac_sha1, 0, { "data", "key", NULL }},
+-  { "HMAC_DSS", nasl_hmac_dss, 0, { "data", "key", NULL }},
+  
+   { "HMAC_RIPEMD160", nasl_hmac_ripemd160, 0, { "data", "key", NULL }},
+   { "dh_generate_key", nasl_dh_generate_key, 0, { "g" , "p", "priv", NULL }},
